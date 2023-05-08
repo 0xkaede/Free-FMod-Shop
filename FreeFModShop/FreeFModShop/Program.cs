@@ -9,18 +9,40 @@ namespace FreeFModShop
 {
     internal class Program
     {
-        private static readonly string ID = "User ID Here";
-        private static readonly string Bearer = "Bearer Here";
+        private static readonly string IdFile = "FMod_ID.txt";
+        private static readonly string BearerFile = "FMod_Bearer.txt";
+        private static string ID { get; set; }
+        private static string Bearer { get; set; }
 
         public static async Task Main(string[] args)
         {
             Console.Title = "Free Fmod items by 0xkaede";
             Console.WriteLine("Created by 0xkaede thank you for using! Be warned you will go into minus vbucks!");
 
+            if(!File.Exists(IdFile))
+            {
+                Console.Write("\nPlease enter your User ID: ");
+                ID = Console.ReadLine();
+                await File.WriteAllTextAsync(IdFile, ID);
+            }
+            else
+                ID = await File.ReadAllTextAsync(IdFile);
+
+            if (!File.Exists(BearerFile))
+            {
+                Console.Write("\nPlease enter your Bearer: ");
+                Bearer = Console.ReadLine();
+                await File.WriteAllTextAsync(BearerFile, Bearer);
+            }
+            else
+                Bearer = await File.ReadAllTextAsync(BearerFile);
+
+            Console.WriteLine();
+
             foreach (var id in await GetFmodOfferIds())
                 await PurchaseItem(id);
 
-            Console.WriteLine("Done!");
+            Console.WriteLine("\nDone!");
             Console.Read();
         }
 
